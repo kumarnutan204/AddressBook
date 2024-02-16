@@ -1,15 +1,15 @@
 class AddressBook:
     def __init__(self):
-        self.AddressBook_dict={}
+        self.addressbookDict={}
         
     def add_contact(self,Contact_obj):
         FullName=Contact_obj.Contact_dict['first']+Contact_obj.Contact_dict['last']
-        self.AddressBook_dict.update({FullName:Contact_obj})
+        self.addressbookDict.update({FullName:Contact_obj})
         print("Contact added in Address book")
         
-    def ShowAddressBook(self):
+    def show_addressbook(self):
         print("Below is the Address Book: ")
-        print(self.AddressBook_dict)
+        print(self.addressbookDict)
 
 class Contact:
     def __init__(self,first,last,address, city,state,zip,phone,email):
@@ -34,7 +34,7 @@ class Contact:
         # print(f"email = {self.email}")
  
 
-def addCont():
+def add_Cont():
     Address=AddressBook()
     first=input("Enter the first name: ")
     last=input("Enter the last name: ")
@@ -50,13 +50,13 @@ def addCont():
     choice=input("Add it in AddressBook? Type 'yes' or 'no'  : ")
     if choice=='yes':
         Address.add_contact(cont)
-        Address.ShowAddressBook()
+        Address.show_addressbook()
     else:
         exit()
     
     
 if __name__=='__main__':
-        addCont()
+        add_Cont()
         
         
         
