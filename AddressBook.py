@@ -1,9 +1,31 @@
+class Contact:
+    def __init__(self,first,last,address, city,state,zip,phone,email):
+        self.Contact_dict={'firstname':first,'lastname':last,'address':address,'city':city,'state':state,'zip':zip,'phone':phone,'email':email}
+    
+    def show_contact(self):
+        print(self.Contact_dict)
+        
+    def edit_contact(self):
+        key_val=input("Enter the key you want to change :  ")
+        if key_val in self.Contact_dict:
+            new_val=input("Enter the value you want to change to :")
+            self.Contact_dict[key_val]=new_val
+            print("your details are edited")
+            # print(self.Contact_dict.show_contact())
+            
+
+
+
 class AddressBook:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.addressbookDict={}
+    
+    def get_Contact(self, name): 
+        return self.addressbookDict.get(name)
         
     def add_contact(self,Contact_obj):
-        fullname=Contact_obj.Contact_dict['first']+ " "+ Contact_obj.Contact_dict['last']
+        fullname=Contact_obj.Contact_dict['firstname']+ " "+ Contact_obj.Contact_dict['lastname']
         self.addressbookDict.update({fullname:Contact_obj})
         print("Contact added in Address book")
         
@@ -16,6 +38,7 @@ class AddressBook:
             print(self.addressbookDict[name].show_contact())
             self.addressbookDict[name].edit_contact(name)
             print(self.addressbookDict[name].show_contact())
+            
     def delete_cont_from_addressbook(self,name):
         if name in self.addressbookDict.keys():
             print("The below contact will be deleted from the Addressbook: ")
@@ -24,32 +47,6 @@ class AddressBook:
             print("Your contact has been deleted: ")
             print(self.addressbookDict)
             
-            
-            
-
-class Contact:
-    def __init__(self,first,last,address, city,state,zip,phone,email):
-        self.Contact_dict={'first':first,'last':last,'address':address,'city':city,'state':state,'zip':zip,'phone':phone,'email':email}
-    
-    def show_contact(self):
-        print(self.Contact_dict)
-        # print(f"first name = {self.first}")
-        # print(f"last name = {self.last}")
-        # print(f"address = {self.address}")
-        # print(f"city = {self.city}")
-        # print(f"state = {self.state}")
-        # print(f"zip = {self.zip}")
-        # print(f"phone number = {self.phone}")
-        # print(f"email = {self.email}")
-    def edit_contact(self,name):
-        val=input("Enter the key you want to change :  ")
-        if val in self.Contact_dict:
-            toval=input("Enter the value you want to change to :")
-            self.Contact_dict[val]=toval
-            print("your details are edited")
-            # print(self.Contact_dict.show_contact())
-            
-
 
 class MultipleAddressBook:
     def __init__(self):
@@ -58,13 +55,14 @@ class MultipleAddressBook:
     
     def show_addressbook_system(self):
         print("Below is the Address Book: ")
-        print(self.multiple_addressbook_dict) 
+        print(self.multiple_addressbook_dict)
         
+    def get_book(self, name): 
+        return self.multiple_addressbook_dict.get(name)
     
     def add_addressbook_to_sys(self,Addressbook_obj):
-        Bookname = input("Enter the name for addressbook  : ")
-        self.multiple_addressbook_dict.update({Bookname:Addressbook_obj})
-        print("Addressbook added in AddressBook System")
+        self.multiple_addressbook_dict.update({Addressbook_obj.name:Addressbook_obj})
+        # print("Addressbook added in AddressBook System")
         
         
         
@@ -73,99 +71,87 @@ class MultipleAddressBook:
           
     
 if __name__=='__main__':
-        print("Welcome to the Address Book management!!!")
-        addressbook_sys=MultipleAddressBook()
-        Address=AddressBook()
-        # change=input("Change addressbook? enter 'yes' to change current addressbook or enter 'no' to stay in current addressbook \n\n")
-        # while(change!='yes'):
-        print("please add initial contact in this addressbook:\n \n")
-        first=input("Enter the first name: ")
-        last=input("Enter the last name: ")
-        address=input("Enter the address: ")
-        city=input("Enter the city name: ")
-        state=input("Enter the state name: ")
-        zip=input("Enter the zip : ")
-        phone=input("Enter the phone number: ")
-        email=input("Enter the email: ")
-        cont=Contact(first,last,address,city,state,zip,phone,email)
-        cont.show_contact()
-        choice=input("Add it in AddressBook and AddressBook System? Type 'yes' or 'no'  : ")
-        if choice=='yes':
-            Address.add_contact(cont)
-            Address.show_addressbook()
-            addressbook_sys.add_addressbook_to_sys(Address)
-            addressbook_sys.show_addressbook_system()
-        
-        # print("1. add another Addressbook")
-        
-        # if choice == '1':
-        #         print("Addressbook 1")
-        #         Address2=AddressBook()
-        #         Address2.show_addressbook()
-                
-        
-        
-        endit='no'
-        while(endit!='yes'):    
-            print("1. add another contact")
-            print("2. edit a contact")
-            print("3. delete a contact")
-            print("  \n\n ")
-        
-            print("Change addressbook? enter 'change' to change current addressbook or enter 'current' to stay in current addressbook \n\n")
-            
-            print("if you want to exit enter 'ex' to exit from the system\n \n ")
-            
-            choice= input("Enter your choice: \t")
-            
-            if choice == '1':
-                first=input("Enter the first name: ")
-                last=input("Enter the last name: ")
-                address=input("Enter the address: ")
-                city=input("Enter the city name: ")
-                state=input("Enter the state name: ")
-                zip=input("Enter the zip : ")
-                phone=input("Enter the phone number: ")
-                email=input("Enter the email: ")
-                cont2=Contact(first,last,address,city,state,zip,phone,email)
-                cont2.show_contact()
-                choice=input("Add it in AddressBook? Type 'yes' or 'no'  : ")
-                if choice=='yes':
-                    Address.add_contact(cont2)
-                    Address.show_addressbook()
-                endit='no'
-            if choice=='2':
-                name=input("Enter the full name of the person you want to edit details of : ")
-                if name in Address.addressbookDict.keys():
-                    Address.edit_addressbook(name)
-            if choice=='3':
-                name=input("Enter the full name of the person you want to delete details of : ")
-                if name in Address.addressbookDict.keys():
-                    Address.delete_cont_from_addressbook(name)
-            if choice=='change':
-                endit='yes'
-                
-            if choice=='ex':
-                exit()
-            
-            print("1. Show all addressbook in system")
-            print("2. add another Addressbook")
-            
-            option=input("Enter your option: ")
-            if option=='1':
-                addressbook_sys.show_addressbook_system()
-                
-            if option == '2':
-                print("Addressbook 1")
-                Address2=AddressBook()
-                
-                Address2.show_addressbook()
-              
-            
-                    
-            
+    print("Welcome to the Address Book management!!!")
+    addressbook_sys=MultipleAddressBook()
     
-
+    while True:
+        print("press 1 to add a book to Addressbook: ")
+        print("press 2 to find a book in Addressbook to edit/update:  ")
+        print("Enter 'ex' to exit the program : ")
+        choice = (input('Enter a choice: '))
+        
+        if choice == '1':
+            book_name = input('Enter book name:')
+            book = addressbook_sys.get_book(book_name)
+            if not book:
+                book = AddressBook(book_name)
+            
+            first=input("Enter the first name: ")
+            last=input("Enter the last name: ")
+            address=input("Enter the address: ")
+            city=input("Enter the city name: ")
+            state=input("Enter the state name: ")
+            zip=input("Enter the zip : ")
+            phone=input("Enter the phone number: ")
+            email=input("Enter the email: ")
+            contact=Contact(first,last,address,city,state,zip,phone,email) 
+            # contact = Contact('Nutan', 'Kumar', 'Hostel', 'Chennai', 'Tamil Nadu', '456635', '234567898', 'nk676@gmail.com')
+            book.add_contact(contact)
+            addressbook_sys.add_addressbook_to_sys(book)
+            # book_choice=int(input("Enter a choice to continue"))
+            print(addressbook_sys.multiple_addressbook_dict)
+        if choice == '2':
+            book_name = input('Enter book name:')
+            book = addressbook_sys.get_book(book_name)
+            print(book.show_addressbook())
+            
+            book_loop='yes'
+            while(book_loop!='no'):
                 
+                book_loop=input("Press yes to work on current book:  ")
+                if book_loop =='yes':
+                    print("Here is the current book : " )
+                    print(book.show_addressbook())
+                    print("1. add another contact")
+                    print("2. edit a contact")
+                    print("3. delete a contact")
+                    print("Enter 'ex' to exit the program ")
+                    
+                    choice=input("Enter choice: ")
+                    
+                    if choice == '1':
+                        first=input("Enter the first name: ")
+                        last=input("Enter the last name: ")
+                        address=input("Enter the address: ")
+                        city=input("Enter the city name: ")
+                        state=input("Enter the state name: ")
+                        zip=input("Enter the zip : ")
+                        phone=input("Enter the phone number: ")
+                        email=input("Enter the email: ")
+                        cont2=Contact(first,last,address,city,state,zip,phone,email)
+                        cont2.show_contact()
+                        choice=input("Add it in AddressBook? Type 'yes' or 'no'  : ")
+                        if choice=='yes':
+                            book.add_contact(cont2)
+                            book.show_addressbook()
+                        endit='no'
+                    if choice=='2':
+                        name=input("Enter the full name of the person you want to edit details of : ")
+                        if name in book.addressbookDict.keys():
+                            book.edit_addressbook(name)
+                    if choice=='3':
+                        name=input("Enter the full name of the person you want to delete details of : ")
+                        if name in book.addressbookDict.keys():
+                            book.delete_cont_from_addressbook(name)
+                    
+                    if choice=='ex':
+                        exit()
+                
+                else:
+                    break
         
+        if choice=='ex':
+            exit()            
+                    
         
+         
