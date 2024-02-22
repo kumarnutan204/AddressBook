@@ -1,3 +1,6 @@
+import json
+
+
 class Contact:
     def __init__(self,firstname,lastname,address, city,state,zip,phone,email):
         self.contact_dict={'firstname':firstname,'lastname':lastname,'address':address,'city':city,'state':state,'zip':zip,'phone':phone,'email':email}
@@ -29,9 +32,9 @@ class AddressBook:
         self.addressbook_dict.update({fullname:Contact_obj})
         print("Contact added in Address book")
         
-    def show_addressbook(self):
+    def display_addressbook(self):
         print("Below is the Address Book: ")
-        print(self.addressbook_dict)
+        return self.addressbook_dict
         
     def edit_addressbook(self,name):
         if name in self.addressbook_dict.keys():
@@ -68,7 +71,19 @@ class MultipleAddressBook:
         self.multiple_addressbook_dict.update({Addressbook_obj.name:Addressbook_obj})
         # print("Addressbook added in AddressBook System")
         
+    def add_to_json(self):
+        for book in self.multiple_addressbook_dict.values():
+            json_data = {book.name : {}}
+            cont_dict = json_data[book.name]
+            for i in book.addressbook_dict.values():
+                print(i.contact_dict)
+                print("Next item\n")
+                cont_dict.update({i.contact_dict['firstname']+ " "+ i.contact_dict['lastname']:i.contact_dict})
         
+        with open('contacts.json', 'w') as file:
+                data = (json_data)
+                json.dump(data, file, indent=4)
+                    
         
         
         
@@ -77,13 +92,14 @@ class MultipleAddressBook:
 if __name__=='__main__':
     print("Welcome to the Address Book management!!!")
     addressbook_sys=MultipleAddressBook()
-    
+    print(vars(addressbook_sys))
     while True:
-        print("press 1 to add a book to Addressbook: ")
+        print("press 1 to add a new book to Addressbook: ")
         print("press 2 to find a book in Addressbook to edit/update:  ")
         print("press 3 to delete a book: ")
         print("press 4 to show all the books in the system: ")
         print("press 5 to create a json of the addressbook system :")
+        
         
         print("Enter 'ex' to exit the program : ")
         choice = (input('Enter a choice: '))
@@ -103,15 +119,17 @@ if __name__=='__main__':
             # phone=input("Enter the phone number: ")
             # email=input("Enter the email: ")
             # contact=Contact(first,last,address,city,state,zip,phone,email) 
-            contact = Contact('Nutan', 'Kumar', 'Hostel', 'Chennai', 'Tamil Nadu', '456635', '234567898', 'nk676@gmail.com')
-            book.add_contact(contact)
+            contact1 = Contact('Nutan', 'Kumar', 'Hostel', 'Chennai', 'Tamil Nadu', '456635', '234567898', 'nk676@gmail.com')
+            contact2= Contact('Naveen', 'Jack', 'Abodde', 'Chennai', 'Tamil Nadu', '456423', '242342898', 'nj676@gmail.com')
+            book.add_contact(contact1)
+            book.add_contact(contact2)
             addressbook_sys.add_addressbook_to_sys(book)
             # book_choice=int(input("Enter a choice to continue"))
             print(addressbook_sys.multiple_addressbook_dict)
         if choice == '2':
             book_name = input('Enter book name:')
             book = addressbook_sys.get_book(book_name)
-            print(book.show_addressbook())
+            print(book.display_addressbook())
             
             book_loop='yes'
             while(book_loop!='no'):
@@ -119,7 +137,7 @@ if __name__=='__main__':
                 book_loop=input("Press yes to work on current book:  ")
                 if book_loop =='yes':
                     print("Here is the current book : " )
-                    print(book.show_addressbook())
+                    print(book.display_addressbook())
                     print("1. add another contact")
                     print("2. edit a contact")
                     print("3. delete a contact")
@@ -143,7 +161,7 @@ if __name__=='__main__':
                         choice=input("Add it in AddressBook? Type 'yes' or 'no'  : ")
                         if choice=='yes':
                             book.add_contact(cont2)
-                            book.show_addressbook()
+                            print(book.display_addressbook())
                         endit='no'
                     if choice=='2':
                         name=input("Enter the full name of the person you want to edit details of : ")
@@ -155,7 +173,7 @@ if __name__=='__main__':
                             book.delete_cont_from_addressbook(name)
                     
                     if choice=='4':
-                        book.show_addressbook()
+                        print(book.display_addressbook())
                     
                     if choice=='5':
                         break
@@ -169,19 +187,41 @@ if __name__=='__main__':
         if choice=='3':
             book_name = input('Enter book name:')
             book = addressbook_sys.get_book(book_name)
-            print(book.show_addressbook())
+            print(book.display_addressbook())
             addressbook_sys.delete_book(book_name)
+            
+            
         if choice=='4':
             addressbook_sys.show_addressbook_system()
             
         if choice=='5':
-            for item in addressbook_sys.multiple_addressbook_dict.values():
-                for i in item.addressbook_dict.values():
-                    print(i.contact_dict)
+            addressbook_sys.add_to_json()
+            
+        # if choice=='5':
+            # main_dict={}
+            # for item in addressbook_sys.multiple_addressbook_dict.values():
                 
-                # for i in item.addressbook_dict.values():
-                #     print(i)
-        
+            #         for i in item.addressbook_dict.values():
+            #             print(item.addressbook_dict)
+            #             print(i.contact_dict)
+            #             print("Next item\n")
+            #             main_dict.update({i.contact_dict['firstname']+ " "+ i.contact_dict['lastname']:i.contact_dict})
+                    
+                    
+            #         # # key = addressbook_sys.multiple_addressbook_dict.keys()
+            #         # with open('contacts.json','r') as f:
+            #         #     data= json.load(f)
+            #         #     print(data)
+            #         #     # main_dict.update({key:data})
+                        
+                        
+                
+            #     # for i in item.addressbook_dict.values():
+            #     #     print(i)
+            # # print(main_dict)
+            # with open('contacts.json', 'w') as file:
+            #     data = (main_dict)
+            #     json.dump(data, file, indent=4)
         if choice=='ex':
             exit()            
                     
