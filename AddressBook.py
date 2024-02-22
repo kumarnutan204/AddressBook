@@ -1,4 +1,5 @@
 import json
+import csv
 
 
 class Contact:
@@ -72,18 +73,45 @@ class MultipleAddressBook:
         # print("Addressbook added in AddressBook System")
         
     def add_to_json(self):
-        for book in self.multiple_addressbook_dict.values():
-            json_data = {book.name : {}}
-            cont_dict = json_data[book.name]
-            for i in book.addressbook_dict.values():
-                print(i.contact_dict)
-                print("Next item\n")
-                cont_dict.update({i.contact_dict['firstname']+ " "+ i.contact_dict['lastname']:i.contact_dict})
+        multi_book={}
         
+        for book in self.multiple_addressbook_dict.values():
+            book_json=multi_book.get(book.name)
+            if not book_json:
+                book_json = {book.name : {}}    
+            cont_dict = book_json[book.name]
+            for i in book.addressbook_dict.values():
+                # print(i.contact_dict)
+                # print("Next item\n")
+                cont_dict.update({i.contact_dict['firstname']+ " "+ i.contact_dict['lastname']:i.contact_dict})
+                # book_json.update(cont_dict)
+            multi_book.update(book_json)
         with open('contacts.json', 'w') as file:
-                data = (json_data)
+                data = multi_book
                 json.dump(data, file, indent=4)
                     
+    def add_book_to_csv(self,book_name):
+        try:
+            book = self.multiple_addressbook_dict.get(book_name)
+            if book:
+                print(f"Contacts in {book_name} address book:")
+                book.display_addressbook()  
+
+                
+                with open('book.csv', 'w', newline='') as file:
+                    fieldnames = ['firstname', 'lastname', 'address', 'city', 'state', 'zip', 'phone', 'email']
+                    writer = csv.DictWriter(file, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for contact in book.addressbook_dict.values():
+                        # print(vars(contact).get('contact_dict'))
+                        
+                        writer.writerow(vars(contact).get('contact_dict'))  
+
+                print(f"{book_name} address book converted to CSV successfully.")
+            else:
+                print(f"Address book '{book_name}' not found.")
+        except FileNotFoundError:
+            print("File not found.")
         
         
         
@@ -92,14 +120,14 @@ class MultipleAddressBook:
 if __name__=='__main__':
     print("Welcome to the Address Book management!!!")
     addressbook_sys=MultipleAddressBook()
-    print(vars(addressbook_sys))
+
     while True:
         print("press 1 to add a new book to Addressbook: ")
         print("press 2 to find a book in Addressbook to edit/update:  ")
         print("press 3 to delete a book: ")
         print("press 4 to show all the books in the system: ")
         print("press 5 to create a json of the addressbook system :")
-        
+        print("press 6 to convert a book of contacts to csv")
         
         print("Enter 'ex' to exit the program : ")
         choice = (input('Enter a choice: '))
@@ -120,10 +148,11 @@ if __name__=='__main__':
             # email=input("Enter the email: ")
             # contact=Contact(first,last,address,city,state,zip,phone,email) 
             contact1 = Contact('Nutan', 'Kumar', 'Hostel', 'Chennai', 'Tamil Nadu', '456635', '234567898', 'nk676@gmail.com')
-            contact2= Contact('Naveen', 'Jack', 'Abodde', 'Chennai', 'Tamil Nadu', '456423', '242342898', 'nj676@gmail.com')
+            contact2= Contact('Naveen', 'Jack', 'Abode', 'Chennai', 'Tamil Nadu', '456423', '242342898', 'nj676@gmail.com')
             book.add_contact(contact1)
             book.add_contact(contact2)
             addressbook_sys.add_addressbook_to_sys(book)
+            addressbook_sys.add_to_json()
             # book_choice=int(input("Enter a choice to continue"))
             print(addressbook_sys.multiple_addressbook_dict)
         if choice == '2':
@@ -161,16 +190,21 @@ if __name__=='__main__':
                         choice=input("Add it in AddressBook? Type 'yes' or 'no'  : ")
                         if choice=='yes':
                             book.add_contact(cont2)
+                            addressbook_sys.add_to_json()
                             print(book.display_addressbook())
                         endit='no'
+                    
                     if choice=='2':
                         name=input("Enter the full name of the person you want to edit details of : ")
                         if name in book.addressbook_dict.keys():
                             book.edit_addressbook(name)
+                        addressbook_sys.add_to_json()
+                    
                     if choice=='3':
                         name=input("Enter the full name of the person you want to delete details of : ")
                         if name in book.addressbook_dict.keys():
                             book.delete_cont_from_addressbook(name)
+                        addressbook_sys.add_to_json()
                     
                     if choice=='4':
                         print(book.display_addressbook())
@@ -196,6 +230,9 @@ if __name__=='__main__':
             
         if choice=='5':
             addressbook_sys.add_to_json()
+        if choice=='6':
+            book_name=input("enter the book for whose contacts you want to see:")
+            addressbook_sys.add_book_to_csv(book_name)
             
         # if choice=='5':
             # main_dict={}
